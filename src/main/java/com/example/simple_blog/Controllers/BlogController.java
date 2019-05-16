@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -23,8 +22,11 @@ public class BlogController {
         Iterable<Blog> allBlogs = blogRepository.findAll();
         Optional<Blog> featuredBlog = blogRepository.findById(1);
 
+        if(featuredBlog.isPresent()) {
+            model.addAttribute("featuredBlog", featuredBlog.get());
+        }
         model.addAttribute("blogs", allBlogs);
-        model.addAttribute("featuredBlog", featuredBlog.get());
+
 
         return "blogs";
     }
@@ -48,6 +50,45 @@ public class BlogController {
             model.addAttribute("blog", new Blog());
             return "post";
         }
+    }
+
+    @GetMapping("/post/edit/{id}")
+    public String showEditForm(@PathVariable int id, Model model) {
+        Optional<Blog> blog = blogRepository.findById(id);
+
+        model.addAttribute("blog", blog);
+        model.addAttribute("blogId", id);
+
+        return "edit";
+    }
+
+    @PutMapping("/post/edit/{id}")
+    public String editPost(@Valid Blog blog, BindingResult bindingResult, @PathVariable int id , Model model) {
+        if(bindingResult.hasErrors()) {
+            return "edit";
+        }
+        else {
+            Blog b = blogRepository.findById(id).get();
+            b.setTitle(blog.getTitle());
+            b.setName(blog.getName());
+            b.setBody(blog.getBody());
+
+            blogRepository.save(b);
+
+            model.addAttribute("successMessage", "Blog Successfully Edited!");
+
+            return "edit";
+
+        }
 
     }
+
+    @DeleteMapping("/blog/{id}")
+    public String deleteBlog(@PathVariable int id) {
+        blogRepository.deleteById(id);
+
+        return "redirect:/";
+    }
+
 }
+

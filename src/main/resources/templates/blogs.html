@@ -28,13 +28,13 @@
 
             <div class="nav-scroller py-1 mb-2">
                 <nav class="nav d-flex">
-                    <a class="p-2 text-muted" href="#">Blogs</a>
-                    <a class="p-2 text-muted" href="#">Post</a>
+                    <a class="p-2 text-muted" th:href="@{/}">Blogs</a>
+                    <a class="p-2 text-muted" th:href="@{/post}">Post</a>
                 </nav>
             </div>
 
             <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
-                <div class="col-md-12 px-0">
+                <div class="col-md-12 px-0" th:if="${featuredBlog}">
                     <h1 class="display-3 font-italic text-center">Featured blog post <span class="fa fa-arrow-down"></span></h1>
                     <h2 class="display-4 font-italic" th:text="${featuredBlog.title}"></h2>
                     <p class="lead my-3" th:text="${featuredBlog.body}">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="row mb-2">
-                <div class="col-md-6" th:each="blog : ${blogs}">
+                <div class="col-md-6" th:if="${blogs}" th:each="blog : ${blogs}">
                     <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                         <div class="col p-4 d-flex flex-column position-static">
                             <strong class="d-inline-block mb-2 text-primary" th:text="${blog.name}">#Name of author</strong>
@@ -52,10 +52,17 @@
                             <p class="card-text mb-auto" th:text="${blog.body}">#Body -- This is a wider card with supporting text below as a natural lead-in to additional content.</p>
                             <div class="row">
                                 <div class="col-md-8"></div>
-                                <!--<div class="col-md-4">-->
-                                    <!--<button class="btn btn-secondary">Edit</button>-->
-                                    <!--<button class="btn btn-danger">Delete</button>-->
-                                <!--</div>-->
+                                <div class="col-md-4">
+                                    <a class="btn btn-secondary" th:href="@{'/post/edit/' + ${blog.id}}">Edit</a>
+                                    <form style="display: inline;" autocomplete="off" action="#" th:action="@{'/blog/' + ${blog.id}}"
+                                          th:method="DELETE" class="form-horizontal"
+                                          role="form">
+                                        <input name="_method" type="hidden" value="DELETE" />
+
+                                        <button type="submit"  class="btn btn-danger">Delete</button>
+
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -76,7 +83,6 @@
                 <!--</div>-->
             </div>
         </div>
-
 
 
         <script th:src="@{/js/jquery.slim.min.js}"></script>

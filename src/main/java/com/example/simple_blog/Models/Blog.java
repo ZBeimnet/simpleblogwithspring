@@ -14,7 +14,7 @@ public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "patient_id")
+    @Column(name = "id")
     private int id;
 
     @Column(name = "name")
