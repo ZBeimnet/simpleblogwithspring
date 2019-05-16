@@ -44,35 +44,32 @@
                 <div class="col-md-9">
                     <div class="col-md-8 order-md-1 border pb-5">
                         <h4 class="mb-3">Post a blog!</h4>
-                        <form class="needs-validation" novalidate>
+                        <form method="POST" th:action="@{/post}" th:object="${blog}">
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label for="name">Name of author</label>
-                                    <input type="text" class="form-control" id="name" placeholder="Enter your name" value="" required>
-                                    <div class="invalid-feedback">
-                                        Valid first name is required.
+                                    <input th:field="*{name}" type="text"  class="form-control" id="name" placeholder="Enter your name">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" placeholder="Enter a title" value="" required>
-                                    <div class="invalid-feedback">
-                                        Valid first name is required.
+                                    <input th:field="*{title}" type="text" class="form-control" id="title" placeholder="Enter a title">
+                                    <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label for="body">Body</label>
-                                    <textarea type="text" class="form-control" id="body" placeholder="Write something" value="" required></textarea>
-                                    <div class="invalid-feedback">
-                                        Valid first name is required.
+                                    <textarea th:field="*{body}" type="text" class="form-control" id="body" placeholder="Write something"></textarea>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('body')}" th:errors="*{body}">
                                     </div>
                                 </div>
                             </div>
-
+                            <span class="text-success" th:utext="${successMessage}"></span>
                             <hr class="mb-4">
                             <button class="btn btn-primary btn-lg btn-block" type="submit">Post</button>
                         </form>
